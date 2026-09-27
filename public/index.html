@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whisper AI Transcriber</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100 min-h-screen font-sans flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800/80 backdrop-blur-md bg-slate-900/40 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-indigo-600 to-violet-500 p-2.5 rounded-xl shadow-lg shadow-indigo-600/30">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400">Whisper AI Transcriber</h1>
+                    <p class="text-xs text-slate-400">Local privacy-first speech recognition</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 mr-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                    Ready
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- App Box -->
+        <div class="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl shadow-2xl shadow-indigo-950/20 p-6 md:p-8">
+
+            <!-- Mode Switcher Tabs -->
+            <div class="flex rounded-xl bg-slate-950/60 p-1.5 border border-slate-800/60 mb-8 max-w-md mx-auto">
+                <button id="tabRecord" class="flex-1 py-2.5 text-sm font-medium rounded-lg bg-indigo-600 text-white shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                    Record Voice
+                </button>
+                <button id="tabUpload" class="flex-1 py-2.5 text-sm font-medium rounded-lg text-slate-400 hover:text-slate-200 transition-all duration-200 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    Upload Audio
+                </button>
+            </div>
+
+            <!-- Record Panel -->
+            <div id="panelRecord" class="space-y-6 flex flex-col items-center">
+                <div class="text-center">
+                    <h2 class="text-lg font-semibold text-slate-200">Voice Recorder</h2>
+                    <p class="text-sm text-slate-400">Click the microphone button to start recording your speech.</p>
+                </div>
+
+                <!-- Visualizer Canvas -->
+                <div class="w-full max-w-lg bg-slate-950/80 rounded-xl border border-slate-800/80 p-2 shadow-inner">
+                    <canvas id="visualizer" class="w-full h-24 rounded-lg"></canvas>
+                </div>
+
+                <!-- Timer -->
+                <div id="timer" class="text-3xl font-mono tracking-wider font-semibold text-indigo-400">00:00</div>
+
+                <!-- Record Button -->
+                <div class="flex items-center justify-center pt-2">
+                    <button id="recordBtn" class="relative group focus:outline-none">
+                        <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 opacity-70 group-hover:opacity-100 blur transition duration-300"></div>
+                        <div id="recordBtnInner" class="relative w-20 h-20 bg-slate-900 border-2 border-slate-700 rounded-full flex items-center justify-center text-slate-100 transition-all duration-200 shadow-xl group-active:scale-95">
+                            <svg id="micIcon" class="w-8 h-8 text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Panel (Hidden by default) -->
+            <div id="panelUpload" class="space-y-6 hidden">
+                <div class="text-center">
+                    <h2 class="text-lg font-semibold text-slate-200">Upload Audio File</h2>
+                    <p class="text-sm text-slate-400">Drag and drop your audio file or click to browse.</p>
+                </div>
+
+                <div id="dropZone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 bg-slate-950/30 rounded-2xl p-8 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center group">
+                    <input type="file" id="audioFileInput" class="hidden" accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg">
+                    <div class="bg-indigo-500/10 text-indigo-400 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform duration-200 border border-indigo-500/20">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    </div>
+                    <p class="text-sm font-medium text-slate-200 mb-1">Click to upload or drag & drop</p>
+                    <p class="text-xs text-slate-500">MP3, WAV, M4A, WEBM, OGG (Max 25MB)</p>
+                </div>
+
+                <!-- Selected File Display -->
+                <div id="fileInfo" class="hidden bg-slate-950/60 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <div class="bg-indigo-600/20 text-indigo-400 p-2.5 rounded-lg border border-indigo-500/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                        </div>
+                        <div class="overflow-hidden">
+                            <p id="fileName" class="text-sm font-medium text-slate-200 truncate">audio_file.wav</p>
+                            <p id="fileSize" class="text-xs text-slate-400">0 MB</p>
+                        </div>
+                    </div>
+                    <button id="removeFileBtn" class="text-slate-400 hover:text-red-400 p-1.5 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Options & Action Bar -->
+            <div class="mt-8 pt-6 border-t border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-4 w-full md:w-auto">
+                    <div class="w-full md:w-48">
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Task Type</label>
+                        <select id="taskSelect" class="w-full bg-slate-950 border border-slate-800 text-slate-200 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-indigo-500">
+                            <option value="transcribe">Transcribe (Original)</option>
+                            <option value="translate">Translate to English</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="transcribeBtn" disabled class="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/20 transition duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Transcribe Audio
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Loading / Progress State -->
+        <div id="loadingState" class="hidden mt-6 bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 text-center backdrop-blur-md">
+            <div class="flex flex-col items-center justify-center space-y-3">
+                <div class="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+                <p id="loadingText" class="text-sm font-medium text-slate-300">Processing audio with Whisper AI...</p>
+            </div>
+        </div>
+
+        <!-- Error Banner -->
+        <div id="errorBanner" class="hidden mt-6 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm flex items-center justify-between">
+            <span id="errorMessage">An error occurred.</span>
+            <button id="closeError" class="text-red-400 hover:text-red-300 font-bold">&times;</button>
+        </div>
+
+        <!-- Result Section -->
+        <div id="resultSection" class="hidden mt-6 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-2xl shadow-2xl p-6 md:p-8 space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2.5 h-2.5 rounded-full bg-indigo-500"></div>
+                    <h3 class="text-lg font-semibold text-slate-200">Transcription Result</h3>
+                </div>
+                <div id="metaInfo" class="text-xs text-slate-400 bg-slate-950/60 px-3 py-1 rounded-full border border-slate-800"></div>
+            </div>
+
+            <div class="relative">
+                <textarea id="resultText" readonly class="w-full h-40 bg-slate-950/80 border border-slate-800 text-slate-200 text-sm rounded-xl p-4 focus:outline-none resize-none leading-relaxed"></textarea>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-end gap-3">
+                <button id="copyBtn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                    Copy Text
+                </button>
+                <button id="downloadBtn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Download .txt
+                </button>
+                <button id="clearBtn" class="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-sm font-medium rounded-lg transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    Reset
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-slate-900/40 py-6 text-center text-xs text-slate-500">
+        <p>Whisper AI Transcriber &bull; Powered by OpenAI Whisper &amp; FastAPI</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
