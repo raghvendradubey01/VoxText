@@ -45,7 +45,7 @@ uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 Once running, open your web browser and navigate to:
-🚧 Live Demo: Coming Soon
+🚧 Live Demo: Coming Soon(nearly 1 week)
 
 ---
 
