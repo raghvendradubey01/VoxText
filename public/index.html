@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whisper AI Transcriber</title>
+    <title>VoxText &middot; Speech to Text</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body class="bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100 min-h-screen font-sans flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
 
@@ -22,11 +22,16 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400">Whisper AI Transcriber</h1>
+                    <h1 class="text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-indigo-300 to-cyan-400">VoxText</h1>
                     <p class="text-xs text-slate-400">Local privacy-first speech recognition</p>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
+                <!-- Revealed by auth.js once /api/auth/me answers 200 -->
+                <div id="accountArea" class="hidden flex items-center gap-2">
+                    <span id="accountEmail" class="hidden sm:inline text-xs text-slate-400 max-w-[200px] truncate"></span>
+                    <button id="logoutBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors">Sign out</button>
+                </div>
                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <span class="w-1.5 h-1.5 mr-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
                     Ready
@@ -180,9 +185,10 @@
 
     <!-- Footer -->
     <footer class="border-t border-slate-800/80 bg-slate-900/40 py-6 text-center text-xs text-slate-500">
-        <p>Whisper AI Transcriber &bull; Powered by OpenAI Whisper &amp; FastAPI</p>
+        <p>VoxText &bull; Powered by Faster-Whisper &amp; FastAPI</p>
     </footer>
 
-    <script src="app.js"></script>
+    <script src="/static/app.js"></script>
+    <script src="/static/js/auth.js"></script>
 </body>
 </html>

@@ -6,3 +6,20 @@ __pycache__/
 .DS_Store
 uploads/
 .env
+
+# Local SQLite database (development)
+*.db
+*.db-wal
+*.db-shm
+
+# Auto-generated development SECRET_KEY - never commit this
+instance/
+
+# Tooling caches / virtual envs
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Logs written by run.cmd / selftest.py
+*.log

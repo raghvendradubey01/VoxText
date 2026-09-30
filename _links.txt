@@ -1,0 +1,5 @@
+/ ERR Unable to connect to the remote server
+/login ERR Unable to connect to the remote server
+/signup ERR Unable to connect to the remote server
+/static/app.js ERR Unable to connect to the remote server
+health ERR

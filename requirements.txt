@@ -1,4 +1,23 @@
+# --- Web framework -----------------------------------------------------------
 fastapi
 uvicorn[standard]
-faster-whisper
 python-multipart
+
+# --- Configuration, validation ------------------------------------------------
+pydantic-settings
+email-validator
+
+# --- Database -----------------------------------------------------------------
+SQLAlchemy
+
+# --- Auth / security ----------------------------------------------------------
+bcrypt
+PyJWT
+
+# --- Speech recognition -------------------------------------------------------
+faster-whisper
+
+# --- Tests --------------------------------------------------------------------
+pytest
+httpx
+

@@ -1,0 +1,1 @@
+health=200 {"status":"ok","app":"VoxText","version":"2.0.0","speech_model":"small","speech_model_ready":false,"speech_model_error":null}

@@ -291,8 +291,15 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/api/transcribe', {
                 method: 'POST',
+                credentials: 'same-origin',
                 body: formData
             });
+
+            // Session gone (expired, signed out elsewhere): go sign in again.
+            if (response.status === 401) {
+                window.location.replace('/login');
+                return;
+            }
 
             const data = await response.json();
 
@@ -302,7 +309,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Display results
             resultText.value = data.text;
-            metaInfo.textContent = `Detected Language: ${data.language.toUpperCase()} (${(data.language_probability * 100).toFixed(1)}%)`;
+            const detected = data.language ? data.language.toUpperCase() : 'unknown';
+            const confidence = (typeof data.language_probability === 'number')
+                ? (data.language_probability * 100).toFixed(1) + '%'
+                : 'n/a';
+            metaInfo.textContent = `Detected Language: ${detected} (${confidence})`;
             resultSection.classList.remove('hidden');
             resultSection.scrollIntoView({ behavior: 'smooth' });
 
