@@ -1,4 +1,5 @@
 # VoxText
+(it is still on working release soon !!)
 
 Privacy-first speech-to-text web app: record from the microphone or drop in an
 audio file, and get a transcript back from a **local**
